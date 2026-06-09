@@ -1,0 +1,340 @@
+I.  
+MODULES ET FONCTIONNALITÉS  
+Pour les besoins du système à mettre en place, 4 modules ont été 
+identifiés : 
+❖ Tableau de bord 
+❖ Opérations 
+❖ Paramètres 
+❖ Sécurité (module indépendant intégré au système) 
+Et font l’objet d’une représentation détaillée dans le tableau ci-dessous. 
+MODULES 
+FONCTIONNALITÉS 
+Tableau de bord  
+Opérations  
+Paramètres 
+1- Gérer (créer, modifier, supprimer, lister) les 
+différents objets du système : pays, agence, 
+caisse, produits… 
+2- Affecter une caisse à un utilisateur 
+3- initialiser la réserve de l’agence nouvellement 
+créée 
+Sécurité 
+1- Créer les différentes permissions et rôle 
+2- Créer les utilisateurs 
+3- Modifier les rôles et permissions aux 
+utilisateurs 
+II. 
+ACTEURS/UTILISATEURS 
+Le tableau ci-dessous permet de définir les différents intervenants au système 
+à chaque module : 
+MODULES 
+INTERVENANTS 
+Tableau de bord 
+Super admin 
+Admin  
+Chef-caisse 
+Caissier 
+DG 
+Opérations Caissier 
+Chef-caisse 
+Paramètres Super admin 
+Admin 
+Sécurité Super admin 
+Admin 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+III.  OBJETS DU SYSTÈME 
+ 
+Un objet est un élément abstrait du système disposant d’attributs et qui 
+représente un ensemble d’entités qui sont manipulées par le système. 
+ 
+Pays Agences Caisses Users 
+Partenaires Produits Operations Coupures 
+Paramètres User_types Categorie_op Comptes 
+Produit_type Jours   
+ 
+● Les objets du module sécurité ne sont pas mentionnés  
+ 
+Pays 
+L’objet Pays représente les pays gérer dans le système 
+ATTRIBUTS  
+TYPE 
+Libelle 
+String  
+OBSERVATIONS 
+Description 
+String 
+nullable 
+Agences 
+L’objet Agence représente les agences gérer dans le système 
+ATTRIBUTS  
+TYPE 
+Libelle 
+String  
+OBSERVATIONS 
+Description 
+String 
+nullable 
+Caisses 
+L’objet Caisses représente les caisses gérer dans le système 
+ATTRIBUTS  
+TYPE 
+Libelle 
+OBSERVATIONS 
+String  
+Description 
+String 
+nullable 
+Agences 
+L’objet Agence représente les agences gérer dans le système 
+ATTRIBUTS  TYPE OBSERVATIONS 
+Libelle String  
+Description String nullable 
+Adresse String  
+Tel  String  
+ 
+Users 
+L’objet User représente l’ensemble des utilisateurs gérer dans le système 
+ATTRIBUTS  TYPE OBSERVATIONS 
+Nom String  
+Prenom String nullable 
+Adresse String  
+Email String  
+Login String  
+password String  
+ 
+ 
+User_type 
+L’objet User_type  représente les différents types d’utilisateur traités par le 
+système (admin, caissier, contrôleur, cheffcaisse…) 
+ATTRIBUTS  TYPE OBSERVATIONS 
+Libelle String  
+Description String nullable 
+ 
+ 
+Partenaires 
+L’objet Partenaires représente les banques, microfinances et autres 
+structure partenaire gérer dans le système 
+ATTRIBUTS  TYPE OBSERVATIONS 
+Libelle String  
+Description String nullable 
+Adresse String  
+Tel  String  
+ 
+ 
+Produits 
+L’objet Produit représente les différentes offres gérer dans le système 
+ATTRIBUTS  TYPE OBSERVATIONS 
+Libelle String  
+Description String nullable 
+ 
+ 
+Produit_type 
+L’objet Produit_type représente les différents types de produits traités par le 
+système (bancaire, non bancaire, mobile money…) 
+ATTRIBUTS  TYPE OBSERVATIONS 
+Libelle String  
+Description String nullable 
+ 
+ 
+ 
+ 
+Opérations 
+L’objet Opération représente toutes les transactions effectuées dans le 
+système. 
+ATTRIBUTS  TYPE OBSERVATIONS 
+Date_op datetime  
+Libelle_op String Permettra de sélection 
+des différentes 
+opérations tel que 
+(appro initial, transfert 
+C2C, appro normale, 
+opération bancaire ou 
+rémittence…) 
+Date_val datetime  
+validate boolean  
+Montant  real  
+Nom_client String  
+Nom_deposant String  nullable 
+Tel_deposant  integer  
+Compte_client String nullable 
+Code_op String nullable 
+Remarque String   
+ 
+ 
+Type _operations 
+L’objet type _op représente les différentes type d’opérations traités par le 
+système (versement, dépôt, apporvisionnement…) 
+la table sera alimenté directement la BD, et ne fera plus objet d’ajout, parce 
+chaque élément intervient dans les formules de calcul du système 
+ATTRIBUTS  TYPE OBSERVATIONS 
+Libelle String  
+Description String nullable 
+ 
+ 
+ 
+ 
+Coupures 
+L’objet Coupure représente les différents types de coupures traités par le 
+système (billet de 10.000, 5000, …) 
+ATTRIBUTS  TYPE OBSERVATIONS 
+Valeur  integer  
+Description String nullable 
+ 
+ 
+Comptes 
+L’objet Comptes représente les différents comptes qui peuvent s’associer 
+une agence du système ou une filiale   
+ATTRIBUTS  TYPE OBSERVATIONS 
+Libelle String  
+Description String nullable 
+Contenu numeric  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Jours 
+L’objet Jour représente les différents jour de travail des agences gérer dans 
+le système 
+ATTRIBUTS  TYPE OBSERVATIONS 
+Libelle String  
+Description String nullable 
+ 
+ 
+ 
+NB:  
+A toutes les tables seront ajouter les attributs suivant: 
+id qui servira de clé primaire 
+is_visible (booléen) permettant une suppression logique. un élément dont 
+l’attribut is_visible est “faux” sera considéré comme supprimé et ne sera 
+accessible qu’au utilisateurs ayant les permissions requises. 
+is_active (booléen) permettant une désactivation. ex: un utilisateur désactivé 
+ne pourra pas se connecter ou un élément désactivé ne sera soumis à 
+aucune modification. 
+created_by (integer) permettant de connectre l’identité de l’utilisateur qui aura 
+créé un objet du système. 
+IV. 
+DIAGRAMMES DE SÉQUENCES/DESCRIPTION TEXTUELLE  
+Dans cette partie nous allons détaillés pour chaque fonctionnalité les 
+interactions entre les acteurs et le système selon un ordre chronologique.  
+Sécurité 
+1- Créer les différentes permissions et rôle 
+Description du conteste 
+ Les objets sont les différents éléments gérer (ou manipuler) au niveau de la 
+plateforme. Pour exemple, on a : Comptes, Coupures, Operations, Produits 
+… 
+ Pour chaque objet, on a un ensemble prédéfini d’opérations de base qu’on peut 
+effectuer :créer, modifier, supprimer, rendre visible, activer et des opérations 
+spécifiques tel que l’approvisionnement réservé à des utilisateurs habiletés 
+ Dans le but de contrôler quel utilisateur peut effectuer tel ou tel opération sur un 
+objet, une permission est couplée à chaque opération. On dispose donc sur la 
+base des opérations préfinies, 6 permissions standard(*) disponibles pour 
+chaque objet 
+Permissions Descriptions 
+Gérer (*)  Accorder toutes les permissions 
+Créer (*) Créer un objet 
+Supprimer (*) Supprimer un objet 
+Modifier (*) Modifier un objet 
+Visible (*) Donner la possibilité de voir des éléments 
+Activer (*) Activer ou désactiver des éléments ou utilisateurs 
+Appro Permet de faire l’approvisionnement sur une caisse 
+… … 
+ Ainsi seuls les utilisateurs ayant la permission de créer un pays, pourront 
+effectuer cette opération(créer) ou encore seuls les utilisateurs ayant la 
+permission de modifier des utilisateurs pourront effectuer l’opération 
+correspondante(modifier) 
+ Pour faciliter l’affectation des permissions aux utilisateurs ayant les mêmes 
+permissions, le concept de rôle est introduit 
+ Un rôle est donc constitué d’un ensemble de permission pouvant être affecter à 
+différents utilisateurs 
+ 
+ 
+ 
+ 
+Image illustrative 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Image illustrative 
+1 
+2 
+Paramètre 
+2- Affecter une caisse à un utilisateur 
+Séquence 
+1) L’utilisateur demande formulaire de connexion 
+2) L’utilisateur se connecte et est rediriger vers le back-office admin 
+3) L’utilisateur choisie le menu USERS 
+4) Dans la liste des utilisateurs, on recherche l’utilisateur sur qui on veut apporter 
+des modifications 
+5) On choisit l’action *associer* et on affecte les caisses à l’utilisateur 
+V. RÈGLES DE GESTION 
+Les règles de gestion permettent de définir les relations entre les différents objets du 
+système et aboutissent à la conception du diagramme de classe qui à son tour permet 
+de concevoir la base de données. 
+Dans le souci de pouvoir comprendre les interactions entre les différentes tables qui 
+interviennent dans notre projet, un diagramme de classe à été conçue et disponible 
+via le lien suivant: 
+1. Un pays est composé de plusieurs agences  
+2. Pour un pays, on compte plusieurs partenaires  
+3. Pour un pays, sont associés plusieurs opérations  
+4. Un pays compte plusieurs utilisateurs  
+5. Une agence dispose de plusieurs caisses  
+6. Pour une agence, on a un enregistrement journalier du solde  
+7. Pour une caisse, on enregistre toutes les fermetures et l’heure de la fermeture  
+8. Une caisse est associée à plusieurs utilisateurs (le caissier qui gère les caisse 
+(opérations et dashboard), le cheffe caisse qui s’occupe des 
+approvisionnement et l’admin)  
+9. A une caisse, on associe plusieurs opérations  
+10. À une caisse, on traite plusieurs produits  
+11. Pour une caisse, on gère les différents jours de travail (et les heures 
+d’ouvertures et de fermetures)  
+12. Un utilisateur peut gérer plusieurs caisses (l’attribut approvisionnement 
+déterminera si l’utilisateur peut effectuer des approvisionnements sur la caisse 
+une caisse ou non)  
+13. Un utilisateur peut effectuer des opérations sur uniquement les caisses qu’il 
+gère  
+14. Un utilisateur appartient à une catégorie d’utilisateur appelé type utilisateur  
+15. Une opération est à un montant constitué de plusieurs coupures  
+16. Une opération appartient à une catégorie d’opération  
+17. Chaque catégorie d’opération est caractérisée par au maximum un type 
+d’opération (dépôt ou retrait)  
+18. Chaque type opération est associé à plusieurs produits (à chaque association,on a une commission en % ou un prix)  
+19. Un partenaire peut fournir plusieurs produits  
+20. Un produit ne peut être que d’une catégorie produite (bancaire ou non 
+bancaire)
