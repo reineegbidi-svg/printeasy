@@ -1,21 +1,48 @@
-FROM serversideup/php:8.2-fpm-nginx
+FROM composer:2 AS composer
+
+FROM php:8.2-apache
+
+# Installer les dépendances système
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip
+
+# Installer les extensions PHP nécessaires pour Laravel
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+
+# Activer mod_rewrite d'Apache
+RUN a2enmod rewrite
 
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Copier les fichiers du projet
-COPY . /var/www/html
+# Copier le code source avec les bonnes permissions
+COPY --chown=www-data:www-data . .
 
-# Installer Composer et les dépendances (DÉSACTIVER VÉRIF ADVISORIES !)
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-ENV COMPOSER_DISABLE_ADVISORIES_CHECK=1
-RUN composer update --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
+# Copier Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Définir les permissions correctes (essentielles pour Laravel)
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html \
-    && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache
+# Configurer Composer pour ignorer TOUT (même les security advisories)
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN composer config --global advisories.block false
 
-# Exposer le port 8080 (utilisé par l'image serversideup)
-EXPOSE 8080
+# Installer les dépendances (en mode production)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
+
+# Définir la racine Apache sur le dossier public
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf
+
+# Fixer les permissions pour Laravel
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Exposer le port 80 (Apache utilise 80 par défaut)
+EXPOSE 80
+
+# Lancer Apache
+CMD ["apache2-foreground"]
