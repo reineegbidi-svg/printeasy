@@ -27,12 +27,12 @@ COPY --chown=www-data:www-data . .
 # Copier Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configurer Composer pour ignorer TOUT (même les security advisories)
+# Définir les variables pour Composer (désactiver les advisories)
 ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN composer config --global advisories.block false
+ENV COMPOSER_DISABLE_ADVISORIES_CHECK=1
 
 # Installer les dépendances (en mode production)
-RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
+RUN composer update --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 
 # Définir la racine Apache sur le dossier public
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
