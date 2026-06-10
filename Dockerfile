@@ -6,8 +6,9 @@ WORKDIR /var/www/html
 # Copier les fichiers du projet
 COPY . /var/www/html
 
-# Installer Composer et les dépendances (ignorer TOUS les problèmes !)
+# Installer Composer et les dépendances (DÉSACTIVER VÉRIF ADVISORIES !)
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_DISABLE_ADVISORIES_CHECK=1
 RUN composer update --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 
 # Définir les permissions correctes (essentielles pour Laravel)
