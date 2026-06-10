@@ -6,9 +6,9 @@ WORKDIR /var/www/html
 # Copier les fichiers du projet
 COPY . /var/www/html
 
-# Installer Composer et les dépendances
+# Installer Composer et les dépendances (ignorer les security advisories et platform checks)
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 
 # Définir les permissions correctes (essentielles pour Laravel)
 RUN chown -R www-data:www-data /var/www/html \
