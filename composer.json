@@ -4,7 +4,7 @@
     "description": "PrintEasy - API de gestion des services d'impression",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "^11.30",
         "laravel/sanctum": "^4.0",
         "barryvdh/laravel-dompdf": "^3.0"
     },
@@ -49,8 +49,19 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
+        "platform-check": false,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        },
         "advisories": {
-            "block": false
+            "ignore": [
+                "PKSA-mdq4-51ck-6kdq",
+                "PKSA-8qx3-n5y5-vvnd",
+                "PKSA-q46n-4fdk-zjr4",
+                "PKSA-qzrn-rnz3-85w1",
+                "PKSA-w7xr-vk7n-rstm"
+            ]
         }
     },
     "minimum-stability": "stable",
